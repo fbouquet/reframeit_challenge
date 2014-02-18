@@ -1,6 +1,8 @@
 <h1>Change profile parameters</h1>
 
 <%= form_for(@user, html: {class: "well"}) do |f| %>
+    <legend><%= @user.first_name + " " + @user.name %></legend>
+
     <%= render 'shared/error_messages' %>
 
     <div class="field">

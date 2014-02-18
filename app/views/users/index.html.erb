@@ -6,9 +6,13 @@
 
 <% @users.each do |user|%>
 
-<div class="name">
-	<h2> <%= user.first_name %> <%= user.name %></h2> <%= link_to "View profile",  user_path(user) %> 
-	<hr />
+<div class="well">
+	<h2> <%= user.first_name %> <%= user.name %></h2>
+	<%= link_to "View profile",  user_path(user), class: "btn btn-medium btn-info" %>
+	<div class="pull-right">
+		<%= link_to "Edit profile", edit_user_path(user), class: "btn btn-medium btn-info" %>
+		<%= link_to "Delete user", user_path(user), method: :delete, data: { confirm: "Are you sure you want to delete " + user.first_name + " " + user.name + "?" }, class: "btn btn-medium btn-danger" %>
+	</div>
 </div>
 
 <%end %>
