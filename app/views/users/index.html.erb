@@ -1,0 +1,11 @@
+	<h1>Users list</h1>
+
+<p>These are the users created until now.</p>
+<% @users.each do |user|%>
+
+<div class="name">
+	<h2> <%= user.first_name %> <%= user.name %></h2> <%= link_to "View profile",  user_path(user) %> 
+	<hr />
+</div>
+
+<%end %>
