@@ -1,0 +1,23 @@
+<h1>Change profile parameters</h1>
+
+<%= form_for(@user, html: {class: "well"}) do |f| %>
+    <%= render 'shared/error_messages' %>
+
+    <div class="field">
+      <%= f.label :influency %><br />
+      <%= f.range_field :influency, class:"form-control", in: 0..100, step: 1 %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password %><br />
+      <%= f.password_field :password , class:"form-control"%>
+    </div>
+    <div class="field">
+      <%= f.label :password_confirmation, "Confirmation" %><br />
+      <%= f.password_field :password_confirmation , class:"form-control"%>
+    </div>
+    <br />
+    <div class="actions">
+      <%= f.submit "Change", class:"btn btn-large btn-primary"  %>
+    </div>
+<% end %>

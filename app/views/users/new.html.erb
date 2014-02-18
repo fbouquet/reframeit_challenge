@@ -1,42 +1,42 @@
-  <h1>Sign up</h1>
+    <h1>Sign up</h1>
 
-<%= form_for(@user, html: {class: "well"}) do |f| %>
-  <%= render 'shared/error_messages' %>
-  <fieldset>
-    <div class="field">
-      <%= f.label :first_name, "First name" %><br />
-      <%= f.text_field :first_name , class:"form-control"%>
-    </div>
-    <div class="field">
-      <%= f.label :name %><br />
-      <%= f.text_field :name, class:"form-control"%>
-    </div>
-    <div class="field">
-      <%= f.label :email %><br />
-      <%= f.email_field :email , class:"form-control"%>
-    </div>
+    <%= form_for(@user, html: {class: "well"}) do |f| %>
+        <%= render 'shared/error_messages' %>
 
-    <div class="field">
-      <%= f.label :influency %><br />
-      <%= f.range_field :influency, class:"form-control", in: 0..100, step: 1 %>
-    </div>
+        <div class="field">
+          <%= f.label :first_name, "First name" %><br />
+          <%= f.text_field :first_name , class:"form-control"%>
+        </div>
+        <div class="field">
+          <%= f.label :name %><br />
+          <%= f.text_field :name, class:"form-control"%>
+        </div>
+        <div class="field">
+          <%= f.label :email %><br />
+          <%= f.email_field :email , class:"form-control"%>
+        </div>
 
-    <div class="field">
-      <%= f.label :password %><br />
-      <%= f.password_field :password , class:"form-control"%>
-    </div>
-    <div class="field">
-      <%= f.label :password_confirmation, "Confirmation" %><br />
-      <%= f.password_field :password_confirmation , class:"form-control"%>
-    </div>
-    </br>
-    <div class="actions">
-      <%= f.submit "Inscription", class:"btn btn-primary"  %>
-    </div>
-  </fieldset>
-<% end %>
+        <div class="field">
+          <%= f.label :influency %><br />
+          <%= f.range_field :influency, class:"form-control", in: 0..100, step: 1 %>
+        </div>
 
-<script>
+        <div class="field">
+          <%= f.label :password %><br />
+          <%= f.password_field :password , class:"form-control"%>
+        </div>
+        <div class="field">
+          <%= f.label :password_confirmation, "Confirmation" %><br />
+          <%= f.password_field :password_confirmation , class:"form-control"%>
+        </div>
+        <br />
+        <div class="actions">
+          <%= f.submit "Inscription", class:"btn btn-large btn-primary"  %>
+        </div>
+    <% end %>
+
+
+<!--<script>
   $(function(){
     $("form").on("submit", function(){
     if($("input").val().length < 4){
@@ -44,5 +44,5 @@
         $("div.alert").show("slow").delay(4000).hide("slow");
         return false;
     }
-  });
-</script>
+  })});
+</script>-->

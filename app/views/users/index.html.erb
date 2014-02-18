@@ -1,6 +1,9 @@
 	<h1>Users list</h1>
 
 <p>These are the users created until now.</p>
+
+<%= will_paginate %>
+
 <% @users.each do |user|%>
 
 <div class="name">
@@ -9,3 +12,5 @@
 </div>
 
 <%end %>
+
+<%= will_paginate %>
