@@ -1,14 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ReframeitChallenge</title>
-  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
+  <title>Challenge: deliberative polls</title>
 
-<%= yield %>
+  <%= javascript_include_tag "application","jquery.tokeninput" %>
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= stylesheet_link_tag "token-input" %>
+  <%= stylesheet_link_tag "tags" %>
+  <%= csrf_meta_tags %>
+
+</head>
+
+
+<body>
+  
+  <header>
+  <%= render "layouts/menu" %>
+  </header>
+  
+  <div class="container">
+    <!--flash hash -->
+    <% flash.each do |key, value| %>
+    <div class="alert alert-info"> <%= value %>  </div>
+    <% end %>
+
+
+    <%= yield %>
+  </div>
 
 </body>
 </html>
