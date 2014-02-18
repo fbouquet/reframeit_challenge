@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+	before_action :signed_in_user, only: [:index, :edit, :update, :destroy]
+
   	def show
     	@user = User.find(params[:id])
   	end
@@ -54,4 +56,8 @@ class UsersController < ApplicationController
   	def user_params_update
     	params.require(:user).permit(:influency, :password, :password_confirmation)
   	end
+
+  	def signed_in_user
+      redirect_to signin_url, notice: "Please sign in." unless signed_in?
+    end
 end	
