@@ -1,0 +1,17 @@
+  <h1>Create poll</h1>
+
+<%= form_for(@poll, html: {class: "well"}) do |f| %>
+    <%= render 'shared/error_messages' %>
+
+    <div class="field">
+      <%= f.label :title %><br />
+      <%= f.text_field :title, class:"form-control"%>
+    </div>
+
+    
+
+    <br />
+    <div class="actions">
+      <%= f.submit "Inscription", class:"btn btn-large btn-primary"  %>
+    </div>
+<% end %>

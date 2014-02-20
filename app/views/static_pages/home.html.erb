@@ -1,3 +1,9 @@
-	<h1>Welcome!</h1>
+	<h1>Welcome
+		<% if signed_in? %>
+		<%= " " + current_user.first_name %><% end %>!</h1>
 
-<p><%= link_to "Sign in", signin_path, class: "btn btn-info btn-small" %> to simulate deliberative polling.</p>
+<% if signed_in? %>
+	<p>Maybe you would like to <%= link_to "respond to a poll", polls_path %> or to <%= link_to "create one", new_poll_path %>?</p>
+<% else %>
+	<p><%= link_to "Sign in", signin_path, class: "btn btn-info btn-small" %> to simulate deliberative polling.</p>
+<% end %>

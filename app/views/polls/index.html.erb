@@ -1,0 +1,20 @@
+	<h1>Polls list</h1>
+
+<p>These are the polls created until now.</p>
+
+<%= will_paginate %>
+
+<% @polls.each do |poll|%>
+
+<div class="well">
+	<h2> <%= poll.title %></h2>
+	<%= link_to "View poll",  poll, class: "btn btn-medium btn-info" %>
+	<div class="pull-right">
+		<%= link_to "Edit poll", edit_poll_path(poll), class: "btn btn-medium btn-info" %>
+		<%= link_to "Delete poll", poll_path(poll), method: :delete, data: { confirm: "Are you sure you want to delete the poll \"" + poll.title + "\"?" }, class: "btn btn-medium btn-danger" %>
+	</div>
+</div>
+
+<%end %>
+
+<%= will_paginate %>

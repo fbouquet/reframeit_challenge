@@ -1,0 +1,18 @@
+
+    <h1><%= @poll.title %></h1>
+  
+<p>Poll expert: <%= @expert_user.first_name + " " + @expert_user.name %></p>
+
+<% @questions.each do |question| %>
+
+		<h2><%= question.content %></h2>
+
+	<ul>
+	<% question.answers.each do |answer| %>
+
+		<li><%= answer.content %></li>
+
+	<% end %>
+	</ul>
+
+<% end %>
