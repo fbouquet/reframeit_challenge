@@ -1,6 +1,17 @@
-	<h1>Polls list</h1>
+<% if @only_mypolls_shown %>
+	<%= link_to "View all polls", polls_path, class: "btn btn-medium btn-default pull-right" %>
+<% else if signed_in? %>
+	<%= link_to "View my polls", mypolls_path, class: "btn btn-medium btn-default pull-right" %>
+<% end %>
+<% end %>
 
-<p>These are the polls created until now.</p>
+	<h1><%= @title %></h1>
+
+<% unless @only_mypolls_shown %>
+	<p>These are the polls created until now.</p>
+<% end %>
+
+<p><%= link_to "Create a new poll", new_poll_path, class: "btn btn-medium btn-info" %></p>
 
 <%= will_paginate %>
 
@@ -9,10 +20,12 @@
 <div class="well">
 	<h2> <%= poll.title %></h2>
 	<%= link_to "View poll",  poll, class: "btn btn-medium btn-info" %>
-	<div class="pull-right">
-		<%= link_to "Edit poll", edit_poll_path(poll), class: "btn btn-medium btn-info" %>
-		<%= link_to "Delete poll", poll_path(poll), method: :delete, data: { confirm: "Are you sure you want to delete the poll \"" + poll.title + "\"?" }, class: "btn btn-medium btn-danger" %>
-	</div>
+	<% if current_user == poll.expert_user %>
+		<div class="pull-right">
+			<%= link_to "Edit poll", edit_poll_path(poll), class: "btn btn-medium btn-info" %>
+			<%= link_to "Delete poll", poll_path(poll), method: :delete, data: { confirm: "Are you sure you want to delete the poll \"" + poll.title + "\"?" }, class: "btn btn-medium btn-danger" %>
+		</div>
+	<% end %>
 </div>
 
 <%end %>

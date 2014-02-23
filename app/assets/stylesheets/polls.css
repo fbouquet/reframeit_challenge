@@ -2,3 +2,43 @@
   Place all the styles related to the matching controller here.
   They will automatically be included in application.css.
 */
+
+.question_field {
+	border-left: #BEACAC 1px solid;
+	border-bottom: #BEACAC 1px solid;
+	padding-left: 10px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+
+.answer_field {
+	border-left: #C5B9B9 1px solid;
+	padding-left: 10px;
+}
+
+/* Patch close class to put it just after the previous word */
+.close {
+	float: none;
+}
+
+.btn_add_field {
+	margin-top: 10px;
+}
+
+/* Add margin to btn-block class */
+.btn-block {
+	margin-top: 20px;
+}
+
+.poll_show_answer_content {
+	color: #807777;/*#978D8D;*/
+	/*text-align: center;*/
+}
+
+.poll_show_progress_bar {
+	padding-top: 10px;
+}
+
+.badge-info {
+	background-color: #5BC0DE;
+}

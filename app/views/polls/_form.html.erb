@@ -1,0 +1,16 @@
+<%= form_for @poll, html: {class: "well"} do |f| %>
+  <%= render 'shared/error_messages' %>
+  <%= error_messages @poll %>
+
+  <div class="field">
+    <%= f.label :title %><br />
+    <%= f.text_field :title, class:"form-control", tabindex: 1 %>
+  </div>
+
+  <%= f.fields_for :questions do |builder| %>
+    <%= render "question_fields", :f => builder %>
+  <% end %>
+
+  <p><%= link_to_add_fields "Add question", f, :questions %></p>
+  <p><%= f.submit @submit_button_text, class:"btn btn-block btn-large btn-primary", tabindex: 1 %></p>
+<% end %>

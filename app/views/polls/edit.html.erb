@@ -1,0 +1,8 @@
+<p class="pull-right"><%= link_to "Come back to view page", @poll, class: "btn btn-medium btn-default" %></p>
+<p class="pull-right"><%= link_to "Come back to polls page", polls_path, class: "btn btn-medium btn-default" %></p>
+<br />
+
+  <h1>Edit poll</h1>
+
+<% @submit_button_text = "Edit poll" %>
+<%= render partial: "form" %>

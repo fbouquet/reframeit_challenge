@@ -6,6 +6,12 @@ class Poll < ActiveRecord::Base
 	has_many :user_poll_relationships
 	has_many :participants, through: :user_poll_relationships, source: :user
 
+	accepts_nested_attributes_for :questions, :reject_if => lambda { |a| a[:content].blank? }, :allow_destroy => true
+
 	validates :title, presence: true
-	validates :finished, presence: true
+
+	private
+		def set_defaults
+			self.finished = 0
+		end
 end

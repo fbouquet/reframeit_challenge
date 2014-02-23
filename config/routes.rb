@@ -8,6 +8,11 @@ ReframeitChallenge::Application.routes.draw do
   match '/signin',  to: 'sessions#new', via: "get"
   match '/signout', to: 'sessions#destroy', via: "get"
 
+  match '/mypolls', to: 'polls#mypolls', via: "get"
+
+  match '/polls/:id/respond', to: 'polls#respond', via: "get", as: "respond_poll"
+  match '/polls/:id/respond_save', to: 'polls#respond_save', via: "post"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

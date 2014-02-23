@@ -1,9 +1,16 @@
-<h1>Change profile parameters</h1>
+<div class="pull-right">
+  <p><%= link_to "Come back to view page", @user, class: "btn btn-medium btn-default" %></p>
+  <p><%= link_to "Come back to users page", users_path, class: "btn btn-medium btn-default" %></p>
+</div>
+<br />
+
+  <h1>Change profile parameters</h1>
 
 <%= form_for(@user, html: {class: "well"}) do |f| %>
     <legend><%= @user.first_name + " " + @user.name %></legend>
 
     <%= render 'shared/error_messages' %>
+    <%= error_messages @user %>
 
     <div class="field">
       <%= f.label :influency %><br />

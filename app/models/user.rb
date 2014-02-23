@@ -15,6 +15,10 @@ class User < ActiveRecord::Base
 	validates :password, length: {minimum: 8}
 
 
+	# Expert user in some polls
+	has_many :polls, foreign_key: "expert_user_id"
+
+
 	# Relationships with Answer
 	has_many :user_answers_relationships
 	has_many :chosen_answers, through: :user_answers_relationships, source: :answer

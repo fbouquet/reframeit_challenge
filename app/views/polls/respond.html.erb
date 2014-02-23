@@ -1,0 +1,28 @@
+
+<div class="pull-right">
+	<%= link_to "Come back to poll's view page", @poll, class: "btn btn-medium btn-default" %>
+</div>
+
+	<h1>Respond to "<%= @poll.title %>"</h1>
+
+<div class="well">
+
+	<%= form_tag "/polls/" + @poll.id.to_s + "/respond_save" do %>
+		<% @questions.each do |question| %>
+				<h2><%= question.content %></h2>
+
+			<div class="field">
+		  		<% question.answers.each do |answer| %>
+				    <%= radio_button_tag("question_" + question.id.to_s + "_answer", answer.id) %>
+				    <%= label_tag "question_" + question.id.to_s + "_answer_" + answer.id.to_s, answer.content %>
+				    <br />
+				<% end %>
+			</div>
+					
+		<% end %>
+	 
+		<%= submit_tag "Respond to this poll", class: "btn btn-block btn-primary" %>
+
+	<% end %>
+
+</div>	

@@ -18,7 +18,7 @@ class UsersController < ApplicationController
 		if @user.save
 		  sign_in @user
 		  flash[:success] = "Welcome, " + @user.first_name + " " + @user.name + "!"
-		  redirect_to @user
+		  redirect_to root_path
 		else
 		  render 'new'
 		end
@@ -56,8 +56,4 @@ class UsersController < ApplicationController
   	def user_params_update
     	params.require(:user).permit(:influency, :password, :password_confirmation)
   	end
-
-  	def signed_in_user
-      redirect_to signin_url, notice: "Please sign in." unless signed_in?
-    end
 end	

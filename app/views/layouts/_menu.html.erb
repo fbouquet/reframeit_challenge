@@ -25,7 +25,7 @@
                 <ul class="dropdown-menu">
                   <li><%= link_to "Profile", current_user %></li>
                   <li><%= link_to "Parameters", edit_user_path(current_user) %></li>
-                  <li><a href="#">My polls</a></li>
+                  <li><%= link_to "My polls", mypolls_path %></li>
                   <li class="divider"></li>
                   <li><%= link_to "Sign out", signout_path %></li>
                 </ul>

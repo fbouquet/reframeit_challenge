@@ -1,18 +1,52 @@
 
-    <h1><%= @poll.title %></h1>
-  
-<p>Poll expert: <%= @expert_user.first_name + " " + @expert_user.name %></p>
+<div class="pull-right">
+	<%= link_to "Come back to polls page", polls_path, class: "btn btn-medium btn-default" %>
+	<% if current_user == @poll.expert_user %>
+		<%= link_to "Edit poll", edit_poll_path(@poll), class: "btn btn-medium btn-info" %>
+		<%= link_to "Delete poll", poll_path(@poll), method: :delete, data: { confirm: "Are you sure you want to delete the poll \"" + @poll.title + "\"?" }, class: "btn btn-medium btn-danger" %>
+	<% end %>
+</div>
 
-<% @questions.each do |question| %>
+	<h1><%= @poll.title %></h1>
 
-		<h2><%= question.content %></h2>
+<div class="well">  
+	<p class="label label-info">Poll expert: <%= @expert_user.first_name + " " + @expert_user.name %></p>
 
-	<ul>
-	<% question.answers.each do |answer| %>
+	<%= link_to "Respond to this poll", respond_poll_path(@poll), class: "btn btn-medium btn-info pull-right" %>
 
-		<li><%= answer.content %></li>
+	<br /><br />
+	<p><span class="badge badge-info"><%= @participants.count %></span> participants to this poll until now.</p>
+
+	<% @questions.each do |question| %>
+
+			<h2><%= question.content %></h2>
+
+		<!-- <ul> -->
+		<% question.answers.each do |answer| %>
+			<% answer_nb_responders = answer.responders.count %>
+			<% if answer_nb_responders > 0 %>
+				<% answer_percentage = ((answer_nb_responders.fdiv(@participants.count)) * 100 * 10).round.to_f / 10 %>
+			<% else %>
+				<% answer_percentage = 0; %>
+			<% end %>
+
+			<div class="row">
+				<h4 class="poll_show_answer_content col-md-4 col-md-offset-1"><%= answer.content %></h4>
+
+				<div class="poll_show_progress_bar col-md-6">
+					<div class="progress progress-striped">
+					  <div class="progress-bar"  role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: <%= answer_percentage %>%">
+					    <%= answer_percentage %>%
+					  </div>
+					  <% if answer_nb_responders == 0 %>
+					  	<p style="text-align:center">0%</p>
+					  <% end %>
+					</div>
+				</div>
+			</div>
+
+		<% end %>
+		<!-- </ul> -->
 
 	<% end %>
-	</ul>
-
-<% end %>
+</div>	

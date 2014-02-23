@@ -1,11 +1,15 @@
-<% if @user.errors.any? %>
-  <div class="alert alert-danger">
-    <h2><%= pluralize(@user.errors.count, "error") %> 
-        caused a problem while signing up</h2>
-    <ul>
-    <% @user.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
+<% def error_messages(active_object) %>
+	<% if active_object.errors.any? %>
+	  <div class="alert alert-danger">
+	    <h2><%= pluralize(active_object.errors.count, "error") %> 
+	        caused a problem</h2>
+	    <ul>
+	    <% active_object.errors.full_messages.each do |msg| %>
+	      <li><%= msg %></li>
+	    <% end %>
+	   	<!-- </ul>
+	   </div> -->
+	    <%= "</ul></div>".html_safe %>
+	    <% # Silly fix for a weird problem in interpreting the ul and div tags %>
+	<% end %>
 <% end %>

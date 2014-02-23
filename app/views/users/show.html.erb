@@ -1,11 +1,17 @@
+<p class="pull-right"><%= link_to "Come back to users page", users_path, class: "btn btn-medium btn-default" %></p>
 
     <h1><%= @user.first_name + " " + @user.name %></h1>
   
 
 	<div class="progress progress-striped	">
-	  <div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: <%= @user.influency %>%">
-	    <%= @user.first_name %>'s influence on other users<!--<span class="sr-only"><%= @user.influency %>% Complete</span>-->
+	  <div class="progress-bar"  role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: <%= @user.influency %>%">
+	  	<% if @user.influency > 33 %>
+	    	<%= @user.first_name %>'s influence on other users<!--<span class="sr-only"><%= @user.influency %>% Complete</span>-->
+	    <% end %>
 	  </div>
+	  <% if @user.influency <= 33 %>
+	  	<%= @user.first_name %>'s influence on other users
+	  <% end %>
 	</div>
 
 	<%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-medium btn-info" %>

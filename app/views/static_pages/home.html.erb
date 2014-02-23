@@ -1,9 +1,24 @@
-	<h1>Welcome
-		<% if signed_in? %>
-		<%= " " + current_user.first_name %><% end %>!</h1>
+<div class="jumbotron">
+		<h1>Welcome
+			<% if signed_in? %>
+			<%= " " + current_user.first_name %><% end %>!</h1>
 
-<% if signed_in? %>
-	<p>Maybe you would like to <%= link_to "respond to a poll", polls_path %> or to <%= link_to "create one", new_poll_path %>?</p>
-<% else %>
-	<p><%= link_to "Sign in", signin_path, class: "btn btn-info btn-small" %> to simulate deliberative polling.</p>
-<% end %>
+	<% if signed_in? %>
+		<p>What would you like to do?</p>
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<p><%= link_to "Edit my profile", current_user, class: "btn btn-block btn-large btn-primary" %></p>
+				<p><%= link_to "View users", users_path, class: "btn btn-block btn-large btn-primary" %></p>
+				<p><%= link_to "View my polls", mypolls_path, class: "btn btn-block btn-large btn-primary" %></p>
+				<p><%= link_to "View all polls", polls_path, class: "btn btn-block btn-large btn-primary" %></p>
+				<p><%= link_to "Create a new poll", new_poll_path, class: "btn btn-block btn-large btn-primary" %></p>
+			</div>
+		</div>
+	<% else %>
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<p><%= link_to "Sign in to simulate deliberative polling.", signin_path, class: "btn btn-block btn-large btn-primary" %></p>
+			</div>
+		</div>
+	<% end %>
+</div>
