@@ -4,12 +4,12 @@
   
 
 	<div class="progress progress-striped	">
-	  <div class="progress-bar"  role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: <%= @user.influency %>%">
-	  	<% if @user.influency > 33 %>
-	    	<%= @user.first_name %>'s influence on other users<!--<span class="sr-only"><%= @user.influency %>% Complete</span>-->
+	  <div class="progress-bar"  role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: <%= @user.influence %>%">
+	  	<% if @user.influence > 33 %>
+	    	<%= @user.first_name %>'s influence on other users<!--<span class="sr-only"><%= @user.influence %>% Complete</span>-->
 	    <% end %>
 	  </div>
-	  <% if @user.influency <= 33 %>
+	  <% if @user.influence <= 33 %>
 	  	<%= @user.first_name %>'s influence on other users
 	  <% end %>
 	</div>

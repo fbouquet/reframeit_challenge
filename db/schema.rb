@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140220105255) do
+ActiveRecord::Schema.define(version: 20140223105920) do
 
   create_table "answers", force: true do |t|
     t.string   "content"
@@ -61,7 +61,7 @@ ActiveRecord::Schema.define(version: 20140220105255) do
   create_table "users", force: true do |t|
     t.string   "name"
     t.string   "first_name"
-    t.integer  "influency"
+    t.integer  "influence"
     t.string   "email"
     t.datetime "created_at"
     t.datetime "updated_at"

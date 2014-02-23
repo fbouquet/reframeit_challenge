@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
 	validates :name, presence: true, length: {maximum: 50}
 	validates :first_name, presence: true, length: {maximum: 50}
 
-	validates :influency, presence: true, 
+	validates :influence, presence: true, 
 		numericality: {only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
 
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
