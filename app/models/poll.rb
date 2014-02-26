@@ -16,7 +16,7 @@ class Poll < ActiveRecord::Base
 	end
 
 	def finished!
-		self.finished = 1
+		self.update_attributes(finished: 1)
 	end
 
 	private

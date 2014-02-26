@@ -14,5 +14,7 @@
 	  <% end %>
 	</div>
 
-	<%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-medium btn-info" %>
-	<%= link_to "Delete user", user_path(@user), method: :delete, data: { confirm: "Are you sure you want to delete " + @user.first_name + " " + @user.name + "?" }, class: "btn btn-medium btn-danger" %>
+	<% if signed_in? %>
+		<%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-medium btn-info" %>
+		<%= link_to "Delete user", user_path(@user), method: :delete, data: { confirm: "Are you sure you want to delete " + @user.first_name + " " + @user.name + "?" }, class: "btn btn-medium btn-danger" %>
+	<% end %>

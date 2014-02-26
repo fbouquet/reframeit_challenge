@@ -71,7 +71,7 @@ class PollsController < ApplicationController
 		convinced_users_hash = @poll.expert_user.try_to_convince_other_responders(@poll)
 		flash[:info] = convinced_users_hash_to_s(convinced_users_hash)
 
-		@poll.update_attributes(finished: 1)
+		@poll.finished!
 
 		redirect_to @poll
 	end
@@ -138,7 +138,7 @@ class PollsController < ApplicationController
 
 		def poll_not_finished
 			@poll = Poll.find(params[:id])
-			if @poll.finished == 1
+			if @poll.finished?
 				flash[:info] = "This poll has been closed: you can't respond to it nor edit it anymore."
 				redirect_to @poll
 			end

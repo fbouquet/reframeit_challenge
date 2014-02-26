@@ -14,7 +14,8 @@
 <div class="well">  
 	<p class="label label-info">Poll expert: <%= @expert_user.first_name + " " + @expert_user.name %></p>
 
-	<% unless @poll.finished? or current_user.responded_to?(@poll) %>
+	<% #unless @poll.finished? or current_user.responded_to?(@poll) %>
+	<% if current_user_can_respond_to(@poll) %>
 		<%= link_to "Respond to this poll", respond_poll_path(@poll), class: "btn btn-medium btn-info pull-right" %>
 	<% end %>
 	<% if !@poll.finished? and @poll.expert_user == current_user and current_user.responded_to?(@poll) %>

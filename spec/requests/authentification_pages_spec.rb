@@ -66,11 +66,6 @@ describe "AuthentificationPages" do
 	          before { patch user_path(user) }
 	          specify { expect(response).to redirect_to(signin_path) }
 	        end
-
-	        describe "visiting the user index" do
-	          before { visit users_path }
-	          it { should have_content('Please sign in') }
-	        end
 	      end
 	    end
   	end

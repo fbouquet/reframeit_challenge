@@ -9,4 +9,20 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-ReframeitChallenge::Application.config.secret_key_base = '71bdd0b95c19ad3db45bbabba4d6afea99e55a13702975344c5d403f7687b820b4594dec499244d14bf47d418d19e4f5b68320e6af978320ee84f8c97e9a9882'
+
+require 'securerandom'
+
+def secure_token
+  token_file = Rails.root.join('.secret')
+  if File.exist?(token_file)
+    # Use the existing token.
+    File.read(token_file).chomp
+  else
+    # Generate a new token and store it in token_file.
+    token = SecureRandom.hex(64)
+    File.write(token_file, token)
+    token
+  end
+end
+
+ReframeitChallenge::Application.config.secret_key_base = secure_token

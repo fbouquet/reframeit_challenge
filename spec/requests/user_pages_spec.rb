@@ -55,8 +55,16 @@ describe "UserPages" do
 
     it { should have_content(user.first_name) }
     it { should have_content(user.name) }
-    it { should have_content("Edit profile") }
-    it { should have_content("Delete user") }
+
+    describe "when signed in" do
+      before do 
+        sign_in user 
+        visit user_path(user)
+      end
+
+      it { should have_content("Edit profile") }
+      it { should have_content("Delete user") }
+    end
   end
 
   describe "signup page" do
