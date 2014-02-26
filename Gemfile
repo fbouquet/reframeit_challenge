@@ -5,12 +5,13 @@ gem 'rails', '4.0.2'
 
 #gem 'bootstrap-sass'
 #gem 'twitter-bootstrap-rails'
-gem 'will_paginate', '3.0.pre2'
+gem 'will_paginate'
 gem 'jquery-rails'
 
 group :development, :test do
   gem 'sqlite3'	
   gem 'rspec-rails'
+  gem 'ffaker'
 end
 
 group :production do
@@ -20,11 +21,13 @@ end
 
 group :development do
   gem 'annotate', '2.4.0'
-  gem 'faker', '0.3.1'
 end
 
 group :test do
-  gem 'capybara'  
+  gem 'capybara'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
+  gem "pry", "~> 0.9.12.6"
   gem 'spork', '0.9.0.rc8'
   gem 'factory_girl_rails', '4.2.1'
   # gem 'autotest', '4.4.6'

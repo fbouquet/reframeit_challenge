@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140223105920) do
+ActiveRecord::Schema.define(version: 20140223212125) do
 
   create_table "answers", force: true do |t|
     t.string   "content"
@@ -35,6 +35,17 @@ ActiveRecord::Schema.define(version: 20140223105920) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "user_answers_histories", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "answer_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_answers_histories", ["answer_id"], name: "index_user_answers_histories_on_answer_id"
+  add_index "user_answers_histories", ["user_id", "answer_id"], name: "index_user_answers_histories_on_user_id_and_answer_id", unique: true
+  add_index "user_answers_histories", ["user_id"], name: "index_user_answers_histories_on_user_id"
 
   create_table "user_answers_relationships", force: true do |t|
     t.integer  "user_id"

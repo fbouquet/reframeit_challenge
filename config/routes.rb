@@ -12,6 +12,7 @@ ReframeitChallenge::Application.routes.draw do
 
   match '/polls/:id/respond', to: 'polls#respond', via: "get", as: "respond_poll"
   match '/polls/:id/respond_save', to: 'polls#respond_save', via: "post"
+  match '/polls/:id/end', to: 'polls#end_poll', via: "get", as: "end_poll"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

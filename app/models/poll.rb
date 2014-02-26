@@ -9,6 +9,15 @@ class Poll < ActiveRecord::Base
 	accepts_nested_attributes_for :questions, :reject_if => lambda { |a| a[:content].blank? }, :allow_destroy => true
 
 	validates :title, presence: true
+	validates :expert_user, presence: true
+
+	def finished?
+		self.finished == 1
+	end
+
+	def finished!
+		self.finished = 1
+	end
 
 	private
 		def set_defaults

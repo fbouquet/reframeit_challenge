@@ -1,17 +1,19 @@
 class PollsController < ApplicationController
 	before_action :signed_in_user, only: [:new, :create, :edit, :update, :destroy, :mypolls, :respond, :respond_save]
 	before_action :correct_user, only: [:edit, :update, :destroy]
+	before_action :poll_not_finished, only: [:edit, :update, :respond, :respond_save]
 	before_action :not_responded_yet, only: [:respond, :respond_save]
 	before_action :has_answered_every_question, only: [:respond_save]
+	before_action :current_user_is_expert, only: [:end_poll]
+	before_action :expert_user_has_responded, only: [:end_poll]
 
 	def index
-		@polls = Poll.paginate(page: params[:page], per_page: 10)
+		@polls = Poll.order("finished").paginate(page: params[:page], per_page: 10)
 		@title = "Polls list"
 	end
 
 	def mypolls
-		puts @polls = Poll.where(expert_user: current_user).paginate(page: params[:page], per_page: 10)
-		if @polls = Poll.where(expert_user: current_user).paginate(page: params[:page], per_page: 10)
+		if @polls = Poll.where(expert_user: current_user).paginate(page: params[:page], per_page: 10, order: "finished")
 			@title = "My polls"
 			@only_mypolls_shown = true
 			render "index"
@@ -47,7 +49,7 @@ class PollsController < ApplicationController
 			answer_id = params["question_" + question.id.to_s + "_answer"]
 
 			unless Answer.find(answer_id).be_chosen_by!(current_user)
-				flash[:success] = "Something went wrong while saving your answer to a question. Please try again."
+				flash[:error] = "Something went wrong while saving your answer to a question. Please try again."
 				redirect_to respond_poll_path(@poll)
 			end
 		end
@@ -56,9 +58,22 @@ class PollsController < ApplicationController
 			flash[:success] = "Successfully responded to this poll."
 			redirect_to @poll
 		else
-			flash[:success] = "Something went wrong while saving your response. Please try again."
+			flash[:error] = "Something went wrong while saving your response. Please try again."
 			redirect_to respond_poll_path(@poll)
 		end
+	end
+
+	# Controller to end a poll
+	def end_poll
+		@poll = Poll.find(params[:id])
+		
+		# The expert user tries to convince the others
+		convinced_users_hash = @poll.expert_user.try_to_convince_other_responders(@poll)
+		flash[:info] = convinced_users_hash_to_s(convinced_users_hash)
+
+		@poll.update_attributes(finished: 1)
+
+		redirect_to @poll
 	end
 
 	def new
@@ -112,11 +127,20 @@ class PollsController < ApplicationController
 			params.require(:poll).permit(:title, questions_attributes: [:content, :id, :_destroy, answers_attributes: [:content, :id, :_destroy]])
 		end
 
-		# Before action
+		# Before actions
+
 		def correct_user
 			@poll = Poll.find(params[:id])
 			unless current_user == @poll.expert_user
 				redirect_to polls_path, notice: "You must be the poll's expert user to edit or destroy this poll."
+			end
+		end
+
+		def poll_not_finished
+			@poll = Poll.find(params[:id])
+			if @poll.finished == 1
+				flash[:info] = "This poll has been closed: you can't respond to it nor edit it anymore."
+				redirect_to @poll
 			end
 		end
 
@@ -133,8 +157,24 @@ class PollsController < ApplicationController
 			@poll.questions.each do |question|
 				if params["question_" + question.id.to_s + "_answer"].blank?
 					flash[:info] = "Please answer every question."
-					redirect_to respond_poll_path(@poll)
+					redirect_to respond_poll_path(@poll) and return
 				end
+			end
+		end
+
+		def current_user_is_expert
+			@poll = Poll.find(params[:id])
+			unless current_user == @poll.expert_user
+				flash[:info] = "You are not the expert user for this poll: you can't end it."
+				redirect_to respond_poll_path(@poll)
+			end
+		end
+
+		def expert_user_has_responded
+			@poll = Poll.find(params[:id])
+			unless @poll.expert_user.responded_to?(@poll)
+				flash[:info] = "You have to respond to the poll before ending it."
+				redirect_to respond_poll_path(@poll)
 			end
 		end
 end

@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+	include ApplicationHelper
+
 	before_save { self.email = email.downcase }
 	before_create :create_remember_token
 
@@ -23,6 +25,10 @@ class User < ActiveRecord::Base
 	has_many :user_answers_relationships
 	has_many :chosen_answers, through: :user_answers_relationships, source: :answer
 
+	# Relationships history with Answer
+	has_many :user_answers_history
+	has_many :chosen_answers_history, through: :user_answers_history, source: :answer
+
 	# Relationship with polls into which the user takes part
 	has_many :user_poll_relationships
 	has_many :answered_polls, through: :user_poll_relationships, source: :poll
@@ -33,14 +39,55 @@ class User < ActiveRecord::Base
 	end
 
 	def respond_to!(poll)
-		# We just want to create the association. Replace has_and_many by has_many through
-		#ActiveRecord::Base.connection.execute("INSERT INTO polls_users(user_id, poll_id) VALUES (" + self.id.to_s + ", " + poll.id.to_s + ")")
 		user_poll_relationships.create!(poll_id: poll.id)
 	end
 
 	def unrespond_to!(poll)
-		#ActiveRecord::Base.connection.execute("DELETE FROM polls_users WHERE user_id=" + self.id.to_s + " AND poll_id=" + poll.id.to_s)
 		user_poll_relationships.find_by(poll_id: poll.id).destroy
+	end
+
+
+	def chosen_answer_for_question(question)
+		self.chosen_answers.find_by(question_id: question.id)
+	end
+
+	def chosen_answer_for_question_before_end(question)
+		self.chosen_answers.find_by(question_id: question.id)
+	end
+
+
+	# Method to try to convince other responders to a poll
+	# it returns the hash of users convinced
+	def try_to_convince_other_responders(poll)
+		if poll.expert_user == self
+			# Create a hash to remember who will have been convinced
+			hash = Hash.new()
+			poll.questions.each do |question|
+				current_array = Array.new()
+				hash.store(question.id, current_array)
+
+				poll.participants.each do |participant|
+					# Save current choice in history
+					logger.debug participant.email + " history answer " + participant.chosen_answer_for_question(question).id.to_s
+					participant.chosen_answer_for_question(question).history_be_chosen_by!(participant)
+
+					unless participant == self
+						unless participant.chosen_answer_for_question(question) == self.chosen_answer_for_question(question)
+							if random_number_is_under(self.influence)
+								# The participant has changed his mind
+								participant.chosen_answer_for_question(question).be_not_chosen_by!(participant)
+								# He chooses the answer chosen by the expert
+								self.chosen_answer_for_question(question).be_chosen_by!(participant)
+								# Add the convinced user to the hash
+								current_array.push(participant.first_name + " " + participant.name)
+							end
+						end
+					end
+				end
+			end
+		end
+		# Returns hash
+		hash
 	end
 
 
