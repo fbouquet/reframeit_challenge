@@ -68,7 +68,6 @@ class User < ActiveRecord::Base
 
 				poll.participants.each do |participant|
 					# Save current choice in history
-					logger.debug participant.email + " history answer " + participant.chosen_answer_for_question(question).id.to_s
 					participant.chosen_answer_for_question(question).history_be_chosen_by!(participant)
 
 					unless participant == self
