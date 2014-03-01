@@ -19,7 +19,7 @@ module ApplicationHelper
 
 
   def convinced_users_hash_to_s(hash)
-    return_string = "<h1 class=\"text-center\">Convinced users for each question</h1>"
+    return_string = "<h1 class=\"text-center\">Convinced users on each question</h1>"
     hash.each do |question_id, current_array|
       question_content = Question.find(question_id).content
       return_string += "<h2>" + question_content + "</h2>"

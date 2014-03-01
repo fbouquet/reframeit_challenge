@@ -7,6 +7,12 @@
     <%= f.text_field :title, class:"form-control", tabindex: 1 %>
   </div>
 
+  <div class="field">
+    <%= f.label :ends_at %><br />
+    <%= f.datetime_select :ends_at, default: 1.week.from_now, class:"form-control", tabindex: 1 %>
+  </div>
+  <br />
+
   <%= f.fields_for :questions do |builder| %>
     <%= render "question_fields", :f => builder %>
   <% end %>

@@ -23,6 +23,10 @@
 	<% end %>
 
 	<br /><br />
+	<p class="label label-info">Ends at <%= @poll.ends_at.strftime("%c") %> UTC</p>
+	<br />
+	<br />
+
 	<p><span class="badge badge-info"><%= @participants.count %></span> <%= "participant".pluralize(@participants.count) %> to this poll until now.</p>
 
 

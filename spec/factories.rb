@@ -28,6 +28,7 @@ FactoryGirl.define do
   factory :poll do
     sequence(:title)  { |n| "Poll #{n}" }
     expert_user { FactoryGirl.create(:user) }
+    ends_at { 1.days.from_now }
 
     questions { 
       questions_list = []

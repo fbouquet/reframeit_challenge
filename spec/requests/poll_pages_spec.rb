@@ -144,9 +144,41 @@ describe "PollPages" do
           it { should have_link('Final results', href: "#current_results") }
           it { should have_link('Results before validation', href: "#history_results") }
         end
+
+        describe "poll expires when any user views it" do
+          let(:user) { FactoryGirl.create(:user) }
+
+          before do
+            poll.update_attributes(ends_at: 1.minute.ago)
+            sign_out
+            sign_in user
+            visit poll_path(poll)
+          end
+
+          it { should_not have_link('Respond', href: respond_poll_path(poll)) }
+          it { should_not have_link('End', href: end_poll_path(poll)) }
+          it { should_not have_link('Edit', href: edit_poll_path(poll)) }
+          it { should have_link('Final results', href: "#current_results") }
+          it { should have_link('Results before validation', href: "#history_results") }
+        end
       end
     end
   end
+
+
+  describe "poll doesn't expire anyway if the expert did not respond to it" do
+    let(:user) { FactoryGirl.create(:user) }
+
+    before do
+      poll.update_attributes(ends_at: 1.minute.ago)
+      sign_in user
+      visit poll_path(poll)
+    end
+
+    it { should_not have_link('Final results', href: "#current_results") }
+    it { should_not have_link('Results before validation', href: "#history_results") }
+  end
+
 
   describe "edit page", js: true do
     let(:poll) { FactoryGirl.create(:poll) }

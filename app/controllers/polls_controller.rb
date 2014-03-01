@@ -1,19 +1,21 @@
 class PollsController < ApplicationController
+	include PollsHelper
+
 	before_action :signed_in_user, only: [:new, :create, :edit, :update, :destroy, :mypolls, :respond, :respond_save]
 	before_action :correct_user, only: [:edit, :update, :destroy]
-	before_action :poll_not_finished, only: [:edit, :update, :respond, :respond_save]
+	before_action :poll_not_finished, only: [:edit, :update, :respond, :respond_save, :end_poll]
 	before_action :not_responded_yet, only: [:respond, :respond_save]
 	before_action :has_answered_every_question, only: [:respond_save]
 	before_action :current_user_is_expert, only: [:end_poll]
 	before_action :expert_user_has_responded, only: [:end_poll]
 
 	def index
-		@polls = Poll.order("finished").paginate(page: params[:page], per_page: 10)
+		@polls = Poll.order("finished", "id DESC").paginate(page: params[:page], per_page: 10)
 		@title = "Polls list"
 	end
 
 	def mypolls
-		if @polls = Poll.where(expert_user: current_user).paginate(page: params[:page], per_page: 10, order: "finished")
+		if @polls = Poll.where(expert_user: current_user).order("finished", "id DESC").paginate(page: params[:page], per_page: 10)
 			@title = "My polls"
 			@only_mypolls_shown = true
 			render "index"
@@ -63,15 +65,14 @@ class PollsController < ApplicationController
 		end
 	end
 
-	# Controller to end a poll
+	# Controller to end a poll manually
 	def end_poll
 		@poll = Poll.find(params[:id])
-		
-		# The expert user tries to convince the others
-		convinced_users_hash = @poll.expert_user.try_to_convince_other_responders(@poll)
-		flash[:info] = convinced_users_hash_to_s(convinced_users_hash)
+		convinced_users_hash = @poll.end_poll
 
-		@poll.finished!
+		if signed_in? and current_user == @poll.expert_user
+			flash[:info] = convinced_users_hash_to_s(convinced_users_hash)
+		end
 
 		redirect_to @poll
 	end
@@ -86,6 +87,11 @@ class PollsController < ApplicationController
 
 	def create
 		@poll = current_user.polls.build(poll_params)
+		@poll.ends_at = DateTime.new(poll_params["ends_at(1i)"].to_i, 
+                        	poll_params["ends_at(2i)"].to_i,
+                        	poll_params["ends_at(3i)"].to_i,
+                        	poll_params["ends_at(4i)"].to_i,
+                        	poll_params["ends_at(5i)"].to_i)
 		if @poll.save
 			flash[:success] = "Successfully created poll."
 			redirect_to @poll
@@ -100,6 +106,11 @@ class PollsController < ApplicationController
 
 	def update
 		@poll = Poll.find(params[:id])
+		@poll.ends_at = DateTime.new(poll_params["ends_at(1i)"].to_i, 
+                        	poll_params["ends_at(2i)"].to_i,
+                        	poll_params["ends_at(3i)"].to_i,
+                        	poll_params["ends_at(4i)"].to_i,
+                        	poll_params["ends_at(5i)"].to_i)
 
 		logger.info params[:poll]
 		logger.info poll_params
@@ -124,7 +135,7 @@ class PollsController < ApplicationController
 
 	private
 		def poll_params
-			params.require(:poll).permit(:title, questions_attributes: [:content, :id, :_destroy, answers_attributes: [:content, :id, :_destroy]])
+			params.require(:poll).permit(:title, :ends_at, questions_attributes: [:content, :id, :_destroy, answers_attributes: [:content, :id, :_destroy]])
 		end
 
 		# Before actions
@@ -141,6 +152,7 @@ class PollsController < ApplicationController
 			if @poll.finished?
 				flash[:info] = "This poll has been closed: you can't respond to it nor edit it anymore."
 				redirect_to @poll
+				return
 			end
 		end
 
