@@ -1,4 +1,6 @@
 class Poll < ActiveRecord::Base
+	scope :recent, order("finished, created_at DESC")
+
 	belongs_to :expert_user, class_name: "User"
 	has_many :questions, dependent: :destroy
 	
@@ -32,10 +34,6 @@ class Poll < ActiveRecord::Base
 		self.update_attributes(finished: 0)
 	end
 
-	def expert_has_responded?
-		self.expert_user.responded_to?(self)
-	end
-
 	# Manually ending the poll
 	def end_poll
 		# The expert user tries to convince the others
@@ -46,5 +44,9 @@ class Poll < ActiveRecord::Base
 	private
 		def set_defaults
 			self.finished = 0
+		end
+
+		def expert_has_responded?
+			self.expert_user.responded_to?(self)
 		end
 end

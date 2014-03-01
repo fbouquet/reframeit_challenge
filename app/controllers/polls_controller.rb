@@ -10,12 +10,12 @@ class PollsController < ApplicationController
 	before_action :expert_user_has_responded, only: [:end_poll]
 
 	def index
-		@polls = Poll.order("finished", "id DESC").paginate(page: params[:page], per_page: 10)
+		@polls = Poll.recent.paginate(page: params[:page], per_page: 10)
 		@title = "Polls list"
 	end
 
 	def mypolls
-		if @polls = Poll.where(expert_user: current_user).order("finished", "id DESC").paginate(page: params[:page], per_page: 10)
+		if @polls = current_user.polls.recent.paginate(page: params[:page], per_page: 10)
 			@title = "My polls"
 			@only_mypolls_shown = true
 			render "index"
@@ -45,14 +45,13 @@ class PollsController < ApplicationController
 		@poll = Poll.find(params[:id])
 		@questions = @poll.questions
 
-		logger.debug params
-
 		@questions.each do |question|
 			answer_id = params["question_" + question.id.to_s + "_answer"]
 
 			unless Answer.find(answer_id).be_chosen_by!(current_user)
 				flash[:error] = "Something went wrong while saving your answer to a question. Please try again."
 				redirect_to respond_poll_path(@poll)
+				return
 			end
 		end
 
@@ -87,11 +86,7 @@ class PollsController < ApplicationController
 
 	def create
 		@poll = current_user.polls.build(poll_params)
-		@poll.ends_at = DateTime.new(poll_params["ends_at(1i)"].to_i, 
-                        	poll_params["ends_at(2i)"].to_i,
-                        	poll_params["ends_at(3i)"].to_i,
-                        	poll_params["ends_at(4i)"].to_i,
-                        	poll_params["ends_at(5i)"].to_i)
+		@poll.ends_at = parse_datetime_select(poll_params)
 		if @poll.save
 			flash[:success] = "Successfully created poll."
 			redirect_to @poll
@@ -106,14 +101,7 @@ class PollsController < ApplicationController
 
 	def update
 		@poll = Poll.find(params[:id])
-		@poll.ends_at = DateTime.new(poll_params["ends_at(1i)"].to_i, 
-                        	poll_params["ends_at(2i)"].to_i,
-                        	poll_params["ends_at(3i)"].to_i,
-                        	poll_params["ends_at(4i)"].to_i,
-                        	poll_params["ends_at(5i)"].to_i)
-
-		logger.info params[:poll]
-		logger.info poll_params
+		@poll.ends_at = parse_datetime_select(poll_params)
 
 		if @poll.update_attributes(poll_params)
 			flash[:success] = "Successfully updated poll."
