@@ -1,6 +1,4 @@
 class Poll < ActiveRecord::Base
-	scope :recent, order("finished, created_at DESC")
-
 	belongs_to :expert_user, class_name: "User"
 	has_many :questions, dependent: :destroy
 	

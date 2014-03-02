@@ -10,18 +10,17 @@ class PollsController < ApplicationController
 	before_action :expert_user_has_responded, only: [:end_poll]
 
 	def index
-		@polls = Poll.recent.paginate(page: params[:page], per_page: 10)
+		@polls = Poll.order("finished, created_at DESC").paginate(page: params[:page], per_page: 10)
 		@title = "Polls list"
 	end
 
 	def mypolls
-		if @polls = current_user.polls.recent.paginate(page: params[:page], per_page: 10)
+		if @polls = current_user.polls.order("finished, created_at DESC").paginate(page: params[:page], per_page: 10)
 			@title = "My polls"
 			@only_mypolls_shown = true
 			render "index"
 		else
-			flash[:info] = "You are not the expert user for any poll for the moment, but you can create one."
-			redirect_to polls_path
+			redirect_to polls_path, notice: "You are not the expert user for any poll for the moment, but you can create one."
 		end
 	end
 
@@ -32,64 +31,15 @@ class PollsController < ApplicationController
 		@questions = @poll.questions
 	end
 
-	# Controller to display the form to respond to a poll
-	def respond
-		@poll = Poll.find(params[:id])
-		@expert_user = @poll.expert_user
-		@participants = @poll.participants
-		@questions = @poll.questions
-	end
-
-	# Controller to save response to a poll 
-	def respond_save
-		@poll = Poll.find(params[:id])
-		@questions = @poll.questions
-
-		@questions.each do |question|
-			answer_id = params["question_" + question.id.to_s + "_answer"]
-
-			unless Answer.find(answer_id).be_chosen_by!(current_user)
-				flash[:error] = "Something went wrong while saving your answer to a question. Please try again."
-				redirect_to respond_poll_path(@poll)
-				return
-			end
-		end
-
-		if current_user.respond_to!(@poll)
-			flash[:success] = "Successfully responded to this poll."
-			redirect_to @poll
-		else
-			flash[:error] = "Something went wrong while saving your response. Please try again."
-			redirect_to respond_poll_path(@poll)
-		end
-	end
-
-	# Controller to end a poll manually
-	def end_poll
-		@poll = Poll.find(params[:id])
-		convinced_users_hash = @poll.end_poll
-
-		if signed_in? and current_user == @poll.expert_user
-			flash[:info] = convinced_users_hash_to_s(convinced_users_hash)
-		end
-
-		redirect_to @poll
-	end
-
 	def new
 		@poll = Poll.new()
-		# question = @poll.questions.build
-		# 3.times do
-		# 	question.answers.build
-		# end
 	end
 
 	def create
 		@poll = current_user.polls.build(poll_params)
 		@poll.ends_at = parse_datetime_select(poll_params)
 		if @poll.save
-			flash[:success] = "Successfully created poll."
-			redirect_to @poll
+			redirect_to @poll, notice: "Successfully created poll."
 		else
 			render "new"
 		end
@@ -104,8 +54,7 @@ class PollsController < ApplicationController
 		@poll.ends_at = parse_datetime_select(poll_params)
 
 		if @poll.update_attributes(poll_params)
-			flash[:success] = "Successfully updated poll."
-			redirect_to @poll
+			redirect_to @poll, notice: "Successfully updated poll."
 		else
 			render "edit"
 		end
@@ -114,12 +63,38 @@ class PollsController < ApplicationController
 	def destroy
 		@poll = Poll.find(params[:id])
 		if @poll.destroy
-			flash[:success] = "Successfully deleted poll."
-			redirect_to polls_path
+			redirect_to polls_path, notice: "Successfully deleted poll."
 		else
 			redirect_to @poll
 		end
 	end
+
+	# Controller to display the form to respond to a poll
+	def respond
+		@poll = Poll.find(params[:id])
+		@expert_user = @poll.expert_user
+		@participants = @poll.participants
+		@questions = @poll.questions
+	end
+
+	# Controller to save response to a poll 
+	def respond_save
+		@poll = Poll.find(params[:id])
+		if current_user.save_answers_and_respond_to!(@poll, params)
+			redirect_to @poll, notice: "Successfully responded to this poll."
+		else
+			redirect_to respond_poll_path(@poll), notice: "Something went wrong: please try again."
+		end
+	end
+
+	# Controller to end a poll manually
+	def end_poll
+		@poll = Poll.find(params[:id])
+
+		convinced_users_hash = @poll.end_poll
+		redirect_to @poll, notice: convinced_users_hash_to_s(convinced_users_hash)
+	end
+
 
 	private
 		def poll_params

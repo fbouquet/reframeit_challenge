@@ -32,7 +32,7 @@ describe "PollPages" do
       it { should have_selector('div.pagination') }
 
       it "should list each poll" do
-        Poll.paginate(page: 1, per_page: 10).each do |poll|
+        Poll.order("finished, created_at DESC").paginate(page: 1, per_page: 10).each do |poll|
           expect(page).to have_content(poll.title)
         end
       end
@@ -137,7 +137,7 @@ describe "PollPages" do
             visit end_poll_path(poll)
           end
 
-          it { should have_content "Convinced users for each question" }
+          it { should have_content "Convinced users on each question" }
           it { should_not have_link('Respond', href: respond_poll_path(poll)) }
           it { should_not have_link('End', href: end_poll_path(poll)) }
           it { should_not have_link('Edit', href: edit_poll_path(poll)) }

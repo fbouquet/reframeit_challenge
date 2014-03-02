@@ -47,6 +47,19 @@ class User < ActiveRecord::Base
 	end
 
 
+	def save_answers_and_respond_to!(poll, question_params)
+		poll.questions.each do |question|
+			answer_id = question_params["question_" + question.id.to_s + "_answer"]
+
+			unless Answer.find(answer_id).be_chosen_by!(self)
+				return false
+			end
+		end
+
+		return self.respond_to!(poll)
+	end
+
+
 	def chosen_answer_for_question(question)
 		self.chosen_answers.find_by(question_id: question.id)
 	end
