@@ -21,3 +21,6 @@ module ReframeitChallenge
     # config.i18n.default_locale = :de
   end
 end
+
+# Show 10 items per page by default
+WillPaginate.per_page = 10

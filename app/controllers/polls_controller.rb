@@ -10,12 +10,12 @@ class PollsController < ApplicationController
 	before_action :expert_user_has_responded, only: [:end_poll]
 
 	def index
-		@polls = Poll.order("finished, created_at DESC").paginate(page: params[:page], per_page: 10)
+		@polls = Poll.recent.paginate(page: params[:page])
 		@title = "Polls list"
 	end
 
 	def mypolls
-		if @polls = current_user.polls.order("finished, created_at DESC").paginate(page: params[:page], per_page: 10)
+		if @polls = current_user.polls.recent.paginate(page: params[:page])
 			@title = "My polls"
 			@only_mypolls_shown = true
 			render "index"
